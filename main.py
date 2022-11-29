@@ -65,6 +65,22 @@ class Mob(pygame.sprite.Sprite):
             self.rect.y = random.randrange(-100, -40)
             self.speedy = random.randrange(1, 8)
 
+class Bullet(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.Surface((10, 20))
+        self.image.fill(AZUL)
+        self.rect = self.image.get_rect()
+        self.rect.bottom = y
+        self.rect.centerx = x
+        self.speedy = -10
+
+    def update(self):
+        self.rect.y += self.speedy
+        # Matar ele se ele sair da tela
+        if self.rect.bottom < 0:
+            self.kill()
+
 
 all_sprites = pygame.sprite.Group()
 mobs = pygame.sprite.Group()
@@ -88,6 +104,11 @@ while running:
 
     # Update
     all_sprites.update()
+
+    # Verifica se um Mob acertou o player
+    hits = pygame.sprite.spritecollide(player, mobs, False)
+    if hits:
+        running = False
 
     # Render
     screen.fill(PRETO)
