@@ -3,6 +3,7 @@ O Projeto Topazio é um jogo Shump (Shoot 'em up) feito a partir de um tutorial 
 #
 
 Lista de afazeres:
+
 Fazer o player mover de para cima e para baixo
 
 Adicionar um modelo para o player
