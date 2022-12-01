@@ -44,6 +44,11 @@ class Player(pygame.sprite.Sprite):
         if self.rect.left < 0:
             self.rect.left = 0
 
+    def shoot(self):
+        bullet = Bullet(self.rect.centerx, self.rect.top)
+        all_sprites.add(bullet)
+        bullets.add(bullet)
+
 
 class Mob(pygame.sprite.Sprite):
     def __init__(self):
@@ -65,6 +70,7 @@ class Mob(pygame.sprite.Sprite):
             self.rect.y = random.randrange(-100, -40)
             self.speedy = random.randrange(1, 8)
 
+
 class Bullet(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
@@ -84,6 +90,7 @@ class Bullet(pygame.sprite.Sprite):
 
 all_sprites = pygame.sprite.Group()
 mobs = pygame.sprite.Group()
+bullets = pygame.sprite.Group()
 player = Player()
 all_sprites.add(player)
 for i in range(8):
@@ -101,10 +108,21 @@ while running:
         # Verificar se é necessário fechar a janela
         if event.type == pygame.QUIT:
             running = False
+        # Verifica se o player apertou a tecla de tiro (z)
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_z:
+                player.shoot()
 
     # Update
     all_sprites.update()
 
+    # Verifica se uma bala acertou um mob
+    hits = pygame.sprite.groupcollide(mobs, bullets, True, True)
+    # spawna mais mobs depois de mata-los (temporario)
+    for hit in hits:
+        m = Mob()
+        all_sprites.add(m)
+        mobs.add(m)
     # Verifica se um Mob acertou o player
     hits = pygame.sprite.spritecollide(player, mobs, False)
     if hits:
